@@ -22,8 +22,12 @@ public class Nota {
     @Column(nullable = false)
     private float valor;
 
+    @Column(nullable = false)
+    private boolean reposicao;
+
     public Nota(float valor) {
         this.valor = valor;
+        this.reposicao = false;
     }
 
 }

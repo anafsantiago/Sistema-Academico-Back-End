@@ -1,16 +1,17 @@
 package org.campusconnect.estudafacil.service;
 
+import lombok.RequiredArgsConstructor;
 import org.campusconnect.estudafacil.entity.FichaIndividualAlocacaoDiscente;
 import org.campusconnect.estudafacil.entity.Nota;
 import org.campusconnect.estudafacil.entity.Presenca;
 import org.campusconnect.estudafacil.entity.TurmaUnidadeCurricular;
 import org.campusconnect.estudafacil.repository.FichaIndividualAlocacaoDiscenteRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -24,18 +25,28 @@ public class FichaIndividualAlocacaoDiscenteService {
     private final TurmaUnidadeCurricularService turmaUnidadeCurricularService;
 
     public float calcularResultadoFinal(List<Nota> boletimFicha) {
-        return boletimFicha != null && !boletimFicha.isEmpty()
-                ? (float) boletimFicha.stream()
+        if (boletimFicha == null || boletimFicha.isEmpty()) {
+            return 0.0f;
+        }
+        Nota notaReposicao = boletimFicha.stream()
+                .filter(Nota::isReposicao)
+                .findFirst()
+                .orElse(null);
+        if (notaReposicao != null) {
+            boletimFicha.stream()
+                    .filter(nota -> !nota.isReposicao())
+                    .min(Comparator.comparing(Nota::getValor)).ifPresent(menorNota -> menorNota.setValor(notaReposicao.getValor()));
+        }
+        return (float) boletimFicha.stream()
                 .mapToDouble(Nota::getValor)
                 .average()
-                .orElse(0.0)
-                : 0.0f;
+                .orElse(0.0f);
     }
 
     @Transactional
     public FichaIndividualAlocacaoDiscente cadastrarFichaIndividualAlocacaoDiscente() {
         FichaIndividualAlocacaoDiscente fichaIndividualAlocacaoDiscente = new FichaIndividualAlocacaoDiscente();
-        List<Nota> boletimFicha = Stream.generate(() -> new Nota(0.0f)).limit(3).toList();
+        List<Nota> boletimFicha = Stream.generate(() -> new Nota(0.0f)).limit(4).toList();
         fichaIndividualAlocacaoDiscente.setNotas(boletimFicha);
         fichaIndividualAlocacaoDiscente.setPresencas(new ArrayList<>());
         fichaIndividualAlocacaoDiscente.setFaltas(0);

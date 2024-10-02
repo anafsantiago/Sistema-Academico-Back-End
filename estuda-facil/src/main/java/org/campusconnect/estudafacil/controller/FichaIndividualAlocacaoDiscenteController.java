@@ -26,8 +26,14 @@ public class FichaIndividualAlocacaoDiscenteController {
     }
 
     @PutMapping("/registrar-notas")
-    public ResponseEntity<String> registrarFrequencias(@RequestBody HashMap<Long, List<Float>> notas){
+    public ResponseEntity<String> registrarNotas(@RequestBody HashMap<Long, List<Float>> notas){
         String mensagem = fichaIndividualAlocacaoDiscenteService.registrarNotas(notas);
+        return ResponseEntity.ok(mensagem);
+    }
+
+    @PutMapping("/registrar-presencas")
+    public ResponseEntity<String> registrarFrequencias(@RequestBody HashMap<Long, Boolean> presencas){
+        String mensagem = fichaIndividualAlocacaoDiscenteService.registrarPresencas(presencas);
         return ResponseEntity.ok(mensagem);
     }
 
