@@ -1,10 +1,11 @@
 package org.campusconnect.estudafacil.service;
 
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.campusconnect.estudafacil.entity.CalendarioAcademico;
 import org.campusconnect.estudafacil.entity.SituacaoTurma;
 import org.campusconnect.estudafacil.entity.TurmaUnidadeCurricular;
 import org.campusconnect.estudafacil.repository.TurmaUnidadeCurricularRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,22 @@ public class TurmaUnidadeCurricularService {
     private final HorarioTurmaService horarioTurmaService;
     private final SituacaoTurmaService situacaoTurmaService;
 
+    private CalendarioAcademico calendarioAcademicoVigente;
+
+    @PostConstruct
+    public void init() {
+        this.calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
+    }
+
     public TurmaUnidadeCurricular getTurmaUnidadeCurricularPorId(long idTurma) {
         return turmaRepository.findById(idTurma).orElseThrow(() -> new IllegalArgumentException("Turma não encontrada."));
     }
 
+    public TurmaUnidadeCurricular getTurmaByIdFichaIndividual(long idFichaIndividual) {
+        return turmaRepository.findByIdFichaIndividual(idFichaIndividual).orElseThrow(() -> new IllegalArgumentException("Turma não encontrada."));
+    }
+
     public String gerarCodigoTurma(String siglaUnidadeCurricular, String abvTurno) {
-        CalendarioAcademico calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
         StringBuilder codigoBase = new StringBuilder();
         codigoBase.append(siglaUnidadeCurricular);
         codigoBase.append(calendarioAcademicoVigente.getAnoLetivo());
@@ -53,7 +64,6 @@ public class TurmaUnidadeCurricularService {
 
     @Transactional
     public String cadastrarTurmaUnidadeCurricular(TurmaUnidadeCurricular turmaUnidadeCurricular, List<Long> idsHorarios) {
-        CalendarioAcademico calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
         SituacaoTurma situacaoTurma = situacaoTurmaService.getSitucaoTurmaPorDescricao(SituacaoTurma.SITUACAO_ABERTA);
         TurmaUnidadeCurricular novaTurma = new TurmaUnidadeCurricular();
         novaTurma.setCodigoTurma(turmaUnidadeCurricular.getCodigoTurma());
@@ -70,6 +80,17 @@ public class TurmaUnidadeCurricularService {
         mensagem.append("\n");
         mensagem.append(mensagemHorarios);
         return mensagem.toString();
+    }
+
+    public int calcularDiasDeAulaNoSemestre(TurmaUnidadeCurricular turmaUnidade) {
+        List<LocalDate> diasLetivos = (turmaUnidade.getSemestre() == CalendarioAcademico.PRIMEIRO_SEMESTRE)
+                ? calendarioAcademicoVigente.getDiasLetivosPrimeiroSemestre()
+                : calendarioAcademicoVigente.getDiasLetivosSegundoSemestre();
+        return turmaUnidade.getHorarios().stream()
+                .mapToInt(ht -> (int) diasLetivos.stream()
+                        .filter(diaLetivo -> diaLetivo.getDayOfWeek() == ht.getHorario().getDiaSemana())
+                        .count())
+                .sum();
     }
 
 }

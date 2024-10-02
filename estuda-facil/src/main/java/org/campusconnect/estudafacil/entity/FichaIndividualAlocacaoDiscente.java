@@ -31,11 +31,15 @@ public class FichaIndividualAlocacaoDiscente {
     @JoinColumn(name = "id_boletim_ficha", nullable = false)
     List<Nota> notas;
 
-    @Column(name = "resultado_final", nullable = false)
-    private float resultadoFinal;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_presencario_ficha", nullable = false)
+    private List<Presenca> presencas;
 
     @Column(nullable = false)
     private int faltas;
+
+    @Column(name = "resultado_final", nullable = false)
+    private float resultadoFinal;
 
     @Column(name = "porcentagem_frequencia", nullable = false)
     private float porcentagemFrequencia;

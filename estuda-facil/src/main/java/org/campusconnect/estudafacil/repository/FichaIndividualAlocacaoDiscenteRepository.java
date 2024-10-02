@@ -14,4 +14,7 @@ public interface FichaIndividualAlocacaoDiscenteRepository extends JpaRepository
     @Query("SELECT f.id, f.notas FROM FichaIndividualAlocacaoDiscente f WHERE f.id IN :ids")
     List<FichaIndividualAlocacaoDiscente> findNotasByIdsFichas(@Param("ids") List<Long> idsFichas);
 
+    @Query("SELECT f.id, f.presencas, f.faltas FROM FichaIndividualAlocacaoDiscente f WHERE f.id IN :ids")
+    List<FichaIndividualAlocacaoDiscente> findPresencasByIdsFichas(@Param("ids") List<Long> idsFichas);
+
 }

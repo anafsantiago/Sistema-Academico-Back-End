@@ -11,9 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,8 +21,8 @@ import java.util.List;
 @Table(name = "calendario_academico")
 public class CalendarioAcademico {
 
-    private static final int PRIMEIRO_SEMESTRE = 1;
-    private static final int SEGUNDO_SEMESTRE = 2;
+    public static final int PRIMEIRO_SEMESTRE = 1;
+    public static final int SEGUNDO_SEMESTRE = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,36 +48,6 @@ public class CalendarioAcademico {
 
     @Transient
     private List<LocalDate> diasLetivosSegundoSemestre;
-
-    public CalendarioAcademico(int anoLetivo, LocalDate inicioPrimeiroSemestre, LocalDate fimPrimeiroSemestre,
-                               LocalDate inicioSegundoSemestre, LocalDate fimSegundoSemestre) {
-        this.anoLetivo = anoLetivo;
-        this.inicioPrimeiroSemestre = inicioPrimeiroSemestre;
-        this.fimPrimeiroSemestre = fimPrimeiroSemestre;
-        this.inicioSegundoSemestre = inicioSegundoSemestre;
-        this.fimSegundoSemestre = fimSegundoSemestre;
-        diasLetivosPrimeiroSemestre = new ArrayList<>();
-        diasLetivosSegundoSemestre = new ArrayList<>();
-        gerarDiasLetivos();
-    }
-
-    private void gerarDiasLetivos() {
-        for (LocalDate date = inicioPrimeiroSemestre; !date.isAfter(fimPrimeiroSemestre); date = date.plusDays(1)) {
-            if (isDiaLetivo(date)) {
-                diasLetivosPrimeiroSemestre.add(date);
-            }
-        }
-        for (LocalDate date = inicioSegundoSemestre; !date.isAfter(fimSegundoSemestre); date = date.plusDays(1)) {
-            if (isDiaLetivo(date)) {
-                diasLetivosSegundoSemestre.add(date);
-            }
-        }
-    }
-
-    private boolean isDiaLetivo(LocalDate date) {
-        DayOfWeek diaDaSemana = date.getDayOfWeek();
-        return diaDaSemana != DayOfWeek.SUNDAY;
-    }
 
     public int getSemestreVigente() {
         LocalDate hoje = LocalDate.now();
