@@ -74,20 +74,29 @@ public class FichaIndividualAlocacaoDiscenteService {
                     ficha.setFaltas(ficha.getFaltas() + 1);
                 novaPresenca.setData(LocalDate.now());
                 ficha.getPresencas().add(novaPresenca);
-                calcularPorcentagemFrequencia(ficha);
             });
+            calcularPorcentagemFrequencia(fichasIndividuais);
             fichaIndividualAlocacaoDiscenteRepository.saveAll(fichasIndividuais);
             return "Registro de presenças atualizado com sucesso.";
         }
         return "Houve um problema ao registrar as presenças. Por favor contate o suporte.";
     }
 
-    private void calcularPorcentagemFrequencia(FichaIndividualAlocacaoDiscente ficha) {
-        TurmaUnidadeCurricular turmaUnidadeCurricular = turmaUnidadeCurricularService.getTurmaByIdFichaIndividual(ficha.getId());
+    private void calcularPorcentagemFrequencia(List<FichaIndividualAlocacaoDiscente> fichas) {
+        if (fichas == null || fichas.isEmpty()) {
+            return;
+        }
+        Long idFicha = fichas.stream()
+                .map(FichaIndividualAlocacaoDiscente::getId)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Lista de fichas está vazia"));
+        TurmaUnidadeCurricular turmaUnidadeCurricular = turmaUnidadeCurricularService.getTurmaByIdFichaIndividual(idFicha);
         int qtdDiasAulas = turmaUnidadeCurricularService.calcularDiasDeAulaNoSemestre(turmaUnidadeCurricular);
-        int totalFaltas = ficha.getFaltas();
-        float porcentagemFrequencia = ((float)(qtdDiasAulas - totalFaltas) / qtdDiasAulas) * 100;
-        ficha.setPorcentagemFrequencia(porcentagemFrequencia);
+        fichas.forEach(ficha -> {
+            int totalFaltas = ficha.getFaltas();
+            float porcentagemFrequencia = ((float) (qtdDiasAulas - totalFaltas) / qtdDiasAulas) * 100;
+            ficha.setPorcentagemFrequencia(porcentagemFrequencia);
+        });
     }
 
 }
