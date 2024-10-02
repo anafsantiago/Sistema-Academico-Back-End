@@ -28,15 +28,11 @@ public class FichaIndividualAlocacaoDiscenteService {
         if (boletimFicha == null || boletimFicha.isEmpty()) {
             return 0.0f;
         }
-        Nota notaReposicao = boletimFicha.stream()
+        boletimFicha.stream()
                 .filter(Nota::isReposicao)
-                .findFirst()
-                .orElse(null);
-        if (notaReposicao != null) {
-            boletimFicha.stream()
-                    .filter(nota -> !nota.isReposicao())
-                    .min(Comparator.comparing(Nota::getValor)).ifPresent(menorNota -> menorNota.setValor(notaReposicao.getValor()));
-        }
+                .findFirst().ifPresent(notaReposicao -> boletimFicha.stream()
+                        .filter(nota -> !nota.isReposicao())
+                        .min(Comparator.comparing(Nota::getValor)).ifPresent(menorNota -> menorNota.setValor(notaReposicao.getValor())));
         return (float) boletimFicha.stream()
                 .mapToDouble(Nota::getValor)
                 .average()
