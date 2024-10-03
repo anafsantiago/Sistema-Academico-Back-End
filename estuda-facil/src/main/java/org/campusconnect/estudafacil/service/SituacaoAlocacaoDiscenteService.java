@@ -13,7 +13,7 @@ public class SituacaoAlocacaoDiscenteService {
 
     public SituacaoAlocacaoDiscente getSituacaoAlocacaoDiscentePorDescricao(String situacaoAlocacaoDiscenteDescricao) {
         return situacaoAlocacaoDiscenteRepository.findByDescricao(situacaoAlocacaoDiscenteDescricao)
-                .orElseThrow(()-> new IllegalArgumentException("Situação Alocação Discente nao encontrada."));
+                .orElseThrow(()-> new IllegalArgumentException("Situação Alocação Discente não encontrada."));
     }
 
 }

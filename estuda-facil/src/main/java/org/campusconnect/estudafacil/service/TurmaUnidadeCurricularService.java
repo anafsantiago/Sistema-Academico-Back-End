@@ -22,6 +22,7 @@ public class TurmaUnidadeCurricularService {
     private final CalendarioAcademicoService calendarioAcademicoService;
     private final HorarioTurmaService horarioTurmaService;
     private final SituacaoTurmaService situacaoTurmaService;
+    private final AlocacaoDiscenteTurmaService alocacaoDiscenteTurmaService;
 
     private CalendarioAcademico calendarioAcademicoVigente;
 
@@ -91,6 +92,15 @@ public class TurmaUnidadeCurricularService {
                         .filter(diaLetivo -> diaLetivo.getDayOfWeek() == ht.getHorario().getDiaSemana())
                         .count())
                 .sum();
+    }
+
+    @Transactional
+    public String consolidarTurma(Long idTurma){
+        TurmaUnidadeCurricular turma = getTurmaUnidadeCurricularPorId(idTurma);
+        SituacaoTurma situacaoTurmaConsolidada = situacaoTurmaService.getSitucaoTurmaPorDescricao(SituacaoTurma.SITUACAO_CONSOLIDADA);
+        alocacaoDiscenteTurmaService.consolidarAlocacoesDiscentesPorTurma(idTurma);
+        turma.setSituacaoTurma(situacaoTurmaConsolidada);
+        return "Turma consolidada com sucesso.";
     }
 
 }

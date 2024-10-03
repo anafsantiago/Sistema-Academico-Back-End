@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class SituacaoTurma {
 
     public static final String SITUACAO_ABERTA = "ABERTA";
+    public static final String SITUACAO_CONSOLIDADA = "CONSOLIDADA";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

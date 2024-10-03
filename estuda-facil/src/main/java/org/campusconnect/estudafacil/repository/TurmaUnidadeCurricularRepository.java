@@ -17,8 +17,7 @@ public interface TurmaUnidadeCurricularRepository extends JpaRepository<TurmaUni
 
     @Query(" SELECT t.id, t.semestre, t.horarios FROM TurmaUnidadeCurricular t " +
             " JOIN AlocacaoDiscenteTurma adt ON adt.turmaUnidadeCurricular.id = t.id " +
-            " JOIN FichaIndividualAlocacaoDiscente fiad ON fiad.id = adt.fichaIndividualAlocacaoDiscente.id " +
-            " WHERE fiad.id = :idFichaIndividual ")
+            " WHERE adt.fichaIndividualAlocacaoDiscente.id = :idFichaIndividual ")
     Optional<TurmaUnidadeCurricular> findByIdFichaIndividual(@Param("idFichaIndividual") Long idFichaIndividual);
 
 }

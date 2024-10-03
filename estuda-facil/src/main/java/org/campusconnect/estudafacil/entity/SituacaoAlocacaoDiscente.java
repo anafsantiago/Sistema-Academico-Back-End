@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 public class SituacaoAlocacaoDiscente {
 
     public static final String SITUACAO_ATIVA = "ATIVA";
+    public static final String SITUACAO_REPROVADA = "REPROVADA";
+    public static final String SITUACAO_APROVADA = "APROVADA";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
