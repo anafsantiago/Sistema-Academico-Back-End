@@ -29,7 +29,7 @@ public class FichaIndividualAlocacaoDiscente {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_boletim_ficha", nullable = false)
-    List<Nota> notas;
+    private List<Nota> notas;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_presencario_ficha", nullable = false)
