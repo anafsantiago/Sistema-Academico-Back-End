@@ -26,7 +26,7 @@ public class CalendarioAcademico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "ano_letivo", nullable = false, unique = true)
     private int anoLetivo;

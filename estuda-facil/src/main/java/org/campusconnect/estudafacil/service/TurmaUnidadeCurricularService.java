@@ -95,7 +95,7 @@ public class TurmaUnidadeCurricularService {
     }
 
     @Transactional
-    public String consolidarTurma(Long idTurma){
+    public String consolidarTurma(long idTurma){
         TurmaUnidadeCurricular turma = getTurmaUnidadeCurricularPorId(idTurma);
         SituacaoTurma situacaoTurmaConsolidada = situacaoTurmaService.getSitucaoTurmaPorDescricao(SituacaoTurma.SITUACAO_CONSOLIDADA);
         alocacaoDiscenteTurmaService.consolidarAlocacoesDiscentesPorTurma(idTurma);

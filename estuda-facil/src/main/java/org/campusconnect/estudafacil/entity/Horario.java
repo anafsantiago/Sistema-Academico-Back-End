@@ -22,7 +22,7 @@ public class Horario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "inicio_horario", nullable = false)
     private LocalTime inicioHorario;

@@ -30,7 +30,7 @@ public class MatriculaCursoService {
     }
 
     @Transactional
-    public String cadastrarMatriculaCurso(Discente discente, Long idCurso, CalendarioAcademico calendarioAcademico) {
+    public String cadastrarMatriculaCurso(Discente discente, long idCurso, CalendarioAcademico calendarioAcademico) {
         Curso curso = cursoService.getCursoPorId(idCurso);
         SituacaoMatricula situacaoMatricula = situacaoMatriculaService.getSituacaoMatriculaPorDescricao(SituacaoMatricula.SITUACAO_ATIVA);
         MatriculaCurso matriculaCurso = new MatriculaCurso();

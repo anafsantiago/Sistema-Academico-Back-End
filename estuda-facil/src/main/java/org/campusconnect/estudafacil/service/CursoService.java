@@ -12,7 +12,7 @@ public class CursoService {
 
     private final CursoRepository cursoRepository;
 
-    public Curso getCursoPorId(Long id) {
+    public Curso getCursoPorId(long id) {
         return cursoRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Curso não encontrado."));
     }
 

@@ -93,7 +93,7 @@ public class FichaIndividualAlocacaoDiscenteService {
         if (fichas == null || fichas.isEmpty()) {
             return;
         }
-        Long idFicha = fichas.stream()
+        long idFicha = fichas.stream()
                 .map(FichaIndividualAlocacaoDiscente::getId)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Lista de fichas está vazia"));

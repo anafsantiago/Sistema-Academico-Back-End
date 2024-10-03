@@ -43,7 +43,7 @@ public class PessoaService {
         return "Cadastro realizado com sucesso.";
     }
 
-    public Pessoa getPessoaPorId(Long id) {
+    public Pessoa getPessoaPorId(long id) {
         return pessoaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada."));
     }
@@ -53,7 +53,7 @@ public class PessoaService {
     }
 
     @Transactional
-    public String atualizarPessoa(Long id, Pessoa pessoaAtualizada) {
+    public String atualizarPessoa(long id, Pessoa pessoaAtualizada) {
         Pessoa pessoaExistente = getPessoaPorId(id);
         if (!pessoaExistente.getCpf().equals(pessoaAtualizada.getCpf())) {
             if (pessoaRepository.existsByCpf(pessoaAtualizada.getCpf())) {
@@ -80,7 +80,7 @@ public class PessoaService {
     }
 
     @Transactional
-    public String deletarPessoa(Long id) {
+    public String deletarPessoa(long id) {
         Pessoa pessoa = pessoaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada."));
         pessoaRepository.delete(pessoa);

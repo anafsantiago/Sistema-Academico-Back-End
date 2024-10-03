@@ -23,7 +23,7 @@ public class SituacaoAlocacaoDiscente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false, unique = true, length = 10)
     private String descricao;

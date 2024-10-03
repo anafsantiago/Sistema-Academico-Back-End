@@ -23,7 +23,7 @@ public class AlocacaoDiscenteTurma {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_discente", nullable = false)

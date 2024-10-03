@@ -25,7 +25,7 @@ public class FichaIndividualAlocacaoDiscente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_boletim_ficha", nullable = false)

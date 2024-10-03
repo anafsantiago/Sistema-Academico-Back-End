@@ -23,7 +23,7 @@ public class GradeCurricular {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_grade_unidade")

@@ -19,7 +19,7 @@ public class HorarioTurma {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_turma_unidade", nullable = false)
