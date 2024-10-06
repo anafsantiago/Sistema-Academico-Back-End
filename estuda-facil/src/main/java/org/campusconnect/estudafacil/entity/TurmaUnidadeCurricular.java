@@ -50,6 +50,12 @@ public class TurmaUnidadeCurricular {
     @Column(name = "data_cadastro", nullable = false)
     private LocalDate dataCadastro;
 
+    @Column(name = "data_inicio", nullable = false)
+    private LocalDate dataInicio;
+
+    @Column(name = "data_fim", nullable = false)
+    private LocalDate dataFim;
+
     @Column(nullable = false)
     private int semestre;
 

@@ -35,4 +35,10 @@ public class TurmaUnidadeCurricularController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
     }
 
+    @PutMapping("/consolidar-turma")
+    public ResponseEntity<String> consolidarTurma(@RequestParam long idTurma) {
+        String mensagem = turmaUnidadeCurricularService.consolidarTurma(idTurma);
+        return ResponseEntity.ok(mensagem);
+    }
+
 }

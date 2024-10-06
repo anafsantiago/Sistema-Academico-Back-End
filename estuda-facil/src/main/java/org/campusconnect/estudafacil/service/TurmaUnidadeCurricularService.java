@@ -70,10 +70,16 @@ public class TurmaUnidadeCurricularService {
         novaTurma.setCodigoTurma(turmaUnidadeCurricular.getCodigoTurma());
         novaTurma.setUnidadeCurricular(turmaUnidadeCurricular.getUnidadeCurricular());
         novaTurma.setSituacaoTurma(situacaoTurma);
+        novaTurma.setTurno(turmaUnidadeCurricular.getTurno());
         novaTurma.setDataCadastro(LocalDate.now());
         novaTurma.setSemestre(calendarioAcademicoVigente.getSemestreVigente());
         novaTurma.setAnoLetivo(calendarioAcademicoVigente.getAnoLetivo());
         novaTurma.setQuantidadeVagas(turmaUnidadeCurricular.getQuantidadeVagas());
+        List<LocalDate> diasDeAula = obterDiasDeAula(novaTurma);
+        if (!diasDeAula.isEmpty()) {
+            novaTurma.setDataInicio(diasDeAula.getFirst());
+            novaTurma.setDataFim(diasDeAula.getLast());
+        }
         turmaRepository.save(novaTurma);
         String mensagemHorarios = horarioTurmaService.cadastrarHorarioTurma(turmaUnidadeCurricular, idsHorarios);
         StringBuilder mensagem = new StringBuilder();
@@ -83,24 +89,40 @@ public class TurmaUnidadeCurricularService {
         return mensagem.toString();
     }
 
-    public int calcularDiasDeAulaNoSemestre(TurmaUnidadeCurricular turmaUnidade) {
-        List<LocalDate> diasLetivos = (turmaUnidade.getSemestre() == CalendarioAcademico.PRIMEIRO_SEMESTRE)
+    private List<LocalDate> obterDiasDeAula(TurmaUnidadeCurricular turmaUnidadeCurricular) {
+        List<LocalDate> diasLetivos = (turmaUnidadeCurricular.getSemestre() == CalendarioAcademico.PRIMEIRO_SEMESTRE)
                 ? calendarioAcademicoVigente.getDiasLetivosPrimeiroSemestre()
                 : calendarioAcademicoVigente.getDiasLetivosSegundoSemestre();
-        return turmaUnidade.getHorarios().stream()
-                .mapToInt(ht -> (int) diasLetivos.stream()
-                        .filter(diaLetivo -> diaLetivo.getDayOfWeek() == ht.getHorario().getDiaSemana())
-                        .count())
-                .sum();
+        return diasLetivos.stream()
+                .filter(diaLetivo -> turmaUnidadeCurricular.getHorarios().stream()
+                        .anyMatch(ht -> diaLetivo.getDayOfWeek() == ht.getHorario().getDiaSemana()))
+                .collect(Collectors.toList());
+    }
+
+    public int calcularDiasDeAulaNoSemestre(TurmaUnidadeCurricular turmaUnidade) {
+        List<LocalDate> diasDeAula = obterDiasDeAula(turmaUnidade);
+        return diasDeAula.size();
     }
 
     @Transactional
-    public String consolidarTurma(long idTurma){
+    public String consolidarTurma(long idTurma) {
         TurmaUnidadeCurricular turma = getTurmaUnidadeCurricularPorId(idTurma);
+        LocalDate dataFim = turma.getDataFim();
+        if (!isPeriodoDeConsolidacaoValido(dataFim)) {
+            throw new IllegalArgumentException("A turma só pode ser consolidada no dia da data de fim ou até 5 dias depois.");
+        }
         SituacaoTurma situacaoTurmaConsolidada = situacaoTurmaService.getSitucaoTurmaPorDescricao(SituacaoTurma.SITUACAO_CONSOLIDADA);
         alocacaoDiscenteTurmaService.consolidarAlocacoesDiscentesPorTurma(idTurma);
         turma.setSituacaoTurma(situacaoTurmaConsolidada);
         return "Turma consolidada com sucesso.";
+    }
+
+    public boolean isPeriodoDeConsolidacaoValido(LocalDate dataFim) {
+        if (dataFim == null) {
+            throw new IllegalArgumentException("Data de fim da turma não está definida.");
+        }
+        LocalDate dataAtual = LocalDate.now();
+        return !dataAtual.isBefore(dataFim) && !dataAtual.isAfter(dataFim.plusDays(5));
     }
 
 }
