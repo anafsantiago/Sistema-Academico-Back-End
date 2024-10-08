@@ -16,7 +16,7 @@ public class DocenteService {
     private final UsuarioService usuarioService;
 
     public Docente getdDocentePorId(long idDocente) {
-        return docenteRepository.findById(idDocente).orElseThrow(() -> new IllegalArgumentException("Docente nao encontrado."));
+        return docenteRepository.findById(idDocente).orElseThrow(() -> new IllegalArgumentException("Docente não encontrado."));
     }
 
     public String cadastrarDocente(long idPessoa, boolean isGestor) {
