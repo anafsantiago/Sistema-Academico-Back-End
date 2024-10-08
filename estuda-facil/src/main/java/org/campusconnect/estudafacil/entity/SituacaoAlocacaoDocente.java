@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "situacao_alocacao_docente")
 public class SituacaoAlocacaoDocente {
 
+    public static final String SITUACAO_ATIVA = "ATIVA";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

@@ -23,6 +23,8 @@ import java.time.LocalDate;
 @Table(name = "alocacao_docente_turma")
 public class AlocacaoDocenteTurma {
 
+    public static final int HORAS_AULA_DIA = 3;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

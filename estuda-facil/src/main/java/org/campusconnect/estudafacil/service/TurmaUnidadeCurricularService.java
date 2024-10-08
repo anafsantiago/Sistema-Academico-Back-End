@@ -81,7 +81,7 @@ public class TurmaUnidadeCurricularService {
             novaTurma.setDataFim(diasDeAula.getLast());
         }
         turmaRepository.save(novaTurma);
-        String mensagemHorarios = horarioTurmaService.cadastrarHorarioTurma(turmaUnidadeCurricular, idsHorarios);
+        String mensagemHorarios = horarioTurmaService.cadastrarHorarioTurma(novaTurma, idsHorarios);
         StringBuilder mensagem = new StringBuilder();
         mensagem.append("Turma cadastrada com sucesso.");
         mensagem.append("\n");
@@ -89,7 +89,7 @@ public class TurmaUnidadeCurricularService {
         return mensagem.toString();
     }
 
-    private List<LocalDate> obterDiasDeAula(TurmaUnidadeCurricular turmaUnidadeCurricular) {
+    public List<LocalDate> obterDiasDeAula(TurmaUnidadeCurricular turmaUnidadeCurricular) {
         List<LocalDate> diasLetivos = (turmaUnidadeCurricular.getSemestre() == CalendarioAcademico.PRIMEIRO_SEMESTRE)
                 ? calendarioAcademicoVigente.getDiasLetivosPrimeiroSemestre()
                 : calendarioAcademicoVigente.getDiasLetivosSegundoSemestre();
@@ -102,6 +102,13 @@ public class TurmaUnidadeCurricularService {
     public int calcularDiasDeAulaNoSemestre(TurmaUnidadeCurricular turmaUnidade) {
         List<LocalDate> diasDeAula = obterDiasDeAula(turmaUnidade);
         return diasDeAula.size();
+    }
+
+    public int calcularAulasPorSemana(TurmaUnidadeCurricular turmaUnidadeCurricular) {
+        return (int) turmaUnidadeCurricular.getHorarios().stream()
+                .map(ht -> ht.getHorario().getDiaSemana())
+                .distinct()
+                .count();
     }
 
     @Transactional
