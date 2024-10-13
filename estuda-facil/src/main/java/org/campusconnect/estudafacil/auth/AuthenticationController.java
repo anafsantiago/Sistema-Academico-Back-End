@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationService autenticacaoService;
+    private final AuthenticationService autenticationService;
 
     @PostMapping
     public ResponseEntity<String> login(@RequestBody Login login) {
-        var token = autenticacaoService.generateToken(login);
+        var token = autenticationService.generateToken(login);
         return ResponseEntity.ok(token);
     }
 

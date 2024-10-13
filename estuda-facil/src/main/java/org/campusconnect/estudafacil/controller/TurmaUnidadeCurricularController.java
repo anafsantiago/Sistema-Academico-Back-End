@@ -1,6 +1,7 @@
 package org.campusconnect.estudafacil.controller;
 
 import org.campusconnect.estudafacil.entity.TurmaUnidadeCurricular;
+import org.campusconnect.estudafacil.service.ConsolidacaoTurmaService;
 import org.campusconnect.estudafacil.service.TurmaUnidadeCurricularService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 public class TurmaUnidadeCurricularController {
 
     private final TurmaUnidadeCurricularService turmaUnidadeCurricularService;
+    private final ConsolidacaoTurmaService consolidacaoTurmaService;
 
     @GetMapping("/gerar-codigo")
     public ResponseEntity<String> gerarCodigoTurma(@RequestParam String siglaUnidadeCurricular,
@@ -37,7 +39,7 @@ public class TurmaUnidadeCurricularController {
 
     @PutMapping("/consolidar-turma")
     public ResponseEntity<String> consolidarTurma(@RequestParam long idTurma) {
-        String mensagem = turmaUnidadeCurricularService.consolidarTurma(idTurma);
+        String mensagem = consolidacaoTurmaService.consolidarTurma(idTurma);
         return ResponseEntity.ok(mensagem);
     }
 

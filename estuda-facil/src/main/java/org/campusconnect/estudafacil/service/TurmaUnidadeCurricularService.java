@@ -22,14 +22,6 @@ public class TurmaUnidadeCurricularService {
     private final CalendarioAcademicoService calendarioAcademicoService;
     private final HorarioTurmaService horarioTurmaService;
     private final SituacaoTurmaService situacaoTurmaService;
-    private final AlocacaoDiscenteTurmaService alocacaoDiscenteTurmaService;
-
-    private CalendarioAcademico calendarioAcademicoVigente;
-
-    @PostConstruct
-    public void init() {
-        this.calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
-    }
 
     public TurmaUnidadeCurricular getTurmaUnidadeCurricularPorId(long idTurma) {
         return turmaRepository.findById(idTurma).orElseThrow(() -> new IllegalArgumentException("Turma não encontrada."));
@@ -40,6 +32,7 @@ public class TurmaUnidadeCurricularService {
     }
 
     public String gerarCodigoTurma(String siglaUnidadeCurricular, String abvTurno) {
+        CalendarioAcademico calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
         StringBuilder codigoBase = new StringBuilder();
         codigoBase.append(siglaUnidadeCurricular);
         codigoBase.append(calendarioAcademicoVigente.getAnoLetivo());
@@ -65,6 +58,7 @@ public class TurmaUnidadeCurricularService {
 
     @Transactional
     public String cadastrarTurmaUnidadeCurricular(TurmaUnidadeCurricular turmaUnidadeCurricular, List<Long> idsHorarios) {
+        CalendarioAcademico calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
         SituacaoTurma situacaoTurma = situacaoTurmaService.getSitucaoTurmaPorDescricao(SituacaoTurma.SITUACAO_ABERTA);
         TurmaUnidadeCurricular novaTurma = new TurmaUnidadeCurricular();
         novaTurma.setCodigoTurma(turmaUnidadeCurricular.getCodigoTurma());
@@ -75,7 +69,7 @@ public class TurmaUnidadeCurricularService {
         novaTurma.setSemestre(calendarioAcademicoVigente.getSemestreVigente());
         novaTurma.setAnoLetivo(calendarioAcademicoVigente.getAnoLetivo());
         novaTurma.setQuantidadeVagas(turmaUnidadeCurricular.getQuantidadeVagas());
-        List<LocalDate> diasDeAula = obterDiasDeAula(novaTurma);
+        List<LocalDate> diasDeAula = obterDiasDeAula(novaTurma, calendarioAcademicoVigente);
         if (!diasDeAula.isEmpty()) {
             novaTurma.setDataInicio(diasDeAula.getFirst());
             novaTurma.setDataFim(diasDeAula.getLast());
@@ -89,7 +83,7 @@ public class TurmaUnidadeCurricularService {
         return mensagem.toString();
     }
 
-    public List<LocalDate> obterDiasDeAula(TurmaUnidadeCurricular turmaUnidadeCurricular) {
+    public List<LocalDate> obterDiasDeAula(TurmaUnidadeCurricular turmaUnidadeCurricular, CalendarioAcademico calendarioAcademicoVigente) {
         List<LocalDate> diasLetivos = (turmaUnidadeCurricular.getSemestre() == CalendarioAcademico.PRIMEIRO_SEMESTRE)
                 ? calendarioAcademicoVigente.getDiasLetivosPrimeiroSemestre()
                 : calendarioAcademicoVigente.getDiasLetivosSegundoSemestre();
@@ -100,7 +94,8 @@ public class TurmaUnidadeCurricularService {
     }
 
     public int calcularDiasDeAulaNoSemestre(TurmaUnidadeCurricular turmaUnidade) {
-        List<LocalDate> diasDeAula = obterDiasDeAula(turmaUnidade);
+        CalendarioAcademico calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
+        List<LocalDate> diasDeAula = obterDiasDeAula(turmaUnidade, calendarioAcademicoVigente);
         return diasDeAula.size();
     }
 
@@ -109,19 +104,6 @@ public class TurmaUnidadeCurricularService {
                 .map(ht -> ht.getHorario().getDiaSemana())
                 .distinct()
                 .count();
-    }
-
-    @Transactional
-    public String consolidarTurma(long idTurma) {
-        TurmaUnidadeCurricular turma = getTurmaUnidadeCurricularPorId(idTurma);
-        LocalDate dataFim = turma.getDataFim();
-        if (!isPeriodoDeConsolidacaoValido(dataFim)) {
-            throw new IllegalArgumentException("A turma só pode ser consolidada no dia da data de fim ou até 5 dias depois.");
-        }
-        SituacaoTurma situacaoTurmaConsolidada = situacaoTurmaService.getSitucaoTurmaPorDescricao(SituacaoTurma.SITUACAO_CONSOLIDADA);
-        alocacaoDiscenteTurmaService.consolidarAlocacoesDiscentesPorTurma(idTurma);
-        turma.setSituacaoTurma(situacaoTurmaConsolidada);
-        return "Turma consolidada com sucesso.";
     }
 
     public boolean isPeriodoDeConsolidacaoValido(LocalDate dataFim) {
