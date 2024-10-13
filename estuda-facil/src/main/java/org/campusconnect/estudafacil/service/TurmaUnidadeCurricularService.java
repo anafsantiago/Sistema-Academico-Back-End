@@ -1,6 +1,5 @@
 package org.campusconnect.estudafacil.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.campusconnect.estudafacil.entity.CalendarioAcademico;
 import org.campusconnect.estudafacil.entity.SituacaoTurma;
