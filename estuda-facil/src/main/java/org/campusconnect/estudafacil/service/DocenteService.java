@@ -7,6 +7,8 @@ import org.campusconnect.estudafacil.repository.DocenteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class DocenteService {
@@ -25,6 +27,7 @@ public class DocenteService {
         docente.setPessoa(pessoaDocente);
         docente.setCargaHorariaDisponivel(Docente.CARGA_HORARIA_MAX_SEMANAL);
         docente.setCargaHorariaAlocada(0);
+        docente.setDataCadastro(LocalDate.now());
         docente.setGestor(isGestor);
         docente.setCodDocente(pessoaService.gerarCodigoUnico(pessoaDocente, true));
         docenteRepository.save(docente);

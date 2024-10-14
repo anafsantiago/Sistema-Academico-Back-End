@@ -7,17 +7,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "situacao_alocacao_docente")
 public class SituacaoAlocacaoDocente {
 
     public static final String SITUACAO_ATIVA = "ATIVA";
+    public static final String SITUACAO_FINALIZADA = "FINALIZADA";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

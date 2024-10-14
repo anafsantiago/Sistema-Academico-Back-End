@@ -11,7 +11,7 @@ public class StringUtil {
         if (palavras.length > 1) {
             for (String palavra : palavras) {
                 if (!palavra.isEmpty()) {
-                    iniciais.append(palavra, 0, Math.min(palavra.length(), 3));
+                    iniciais.append(palavra, 0, 1);
                 }
             }
         } else {
