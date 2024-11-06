@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/alocacao-discente")
 @RequiredArgsConstructor
@@ -25,9 +27,9 @@ public class AlocacaoDiscenteTurmaController {
     }
 
     @GetMapping("/carregar-alocacao")
-    public ResponseEntity<AlocacaoDiscenteDTO> cadastrarAlocacaoDiscenteTurma(@RequestParam long idPessoa) {
-        AlocacaoDiscenteDTO alocacaoDiscente = alocacaoDiscenteTurmaService.carregarDadosAlocacaoDiscente(idPessoa);
-        return ResponseEntity.ok().body(alocacaoDiscente);
+    public ResponseEntity<List<AlocacaoDiscenteDTO>> carregarAlocacoesDiscenteTurma(@RequestParam long idPessoa) {
+        List<AlocacaoDiscenteDTO> alocacoesDiscente = alocacaoDiscenteTurmaService.carregarDadosAlocacoesDiscente(idPessoa);
+        return ResponseEntity.ok().body(alocacoesDiscente);
     }
 
 }

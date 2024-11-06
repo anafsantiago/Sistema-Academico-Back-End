@@ -27,6 +27,6 @@ public interface AlocacaoDiscenteTurmaRepository extends JpaRepository<AlocacaoD
         JOIN fid.notas n
         JOIN d.pessoa p WHERE p.id = :idPessoa\s
        \s""")
-    Optional<AlocacaoDiscenteTurma> carregarDadosAlocacaoDiscenteByIdPessoa(@Param("idPessoa") long idPessoa);
+    List<AlocacaoDiscenteTurma> carregarDadosAlocacoesDiscenteByIdPessoa(@Param("idPessoa") long idPessoa);
 
 }

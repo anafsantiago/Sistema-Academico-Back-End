@@ -1,12 +1,14 @@
 package org.campusconnect.estudafacil.service;
 
+import lombok.RequiredArgsConstructor;
+import org.campusconnect.estudafacil.dto.CursoDTO;
+import org.campusconnect.estudafacil.dto.MatriculaCursoDTO;
 import org.campusconnect.estudafacil.entity.CalendarioAcademico;
 import org.campusconnect.estudafacil.entity.Curso;
 import org.campusconnect.estudafacil.entity.Discente;
 import org.campusconnect.estudafacil.entity.MatriculaCurso;
 import org.campusconnect.estudafacil.entity.SituacaoMatricula;
 import org.campusconnect.estudafacil.repository.MatriculaCursoRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +48,23 @@ public class MatriculaCursoService {
         matriculaCurso.setPeriodo(MatriculaCurso.PERIODO_NOVA_MATRICULA);
         matriculaCursoRepository.save(matriculaCurso);
         return "Matrícula cadastrada com sucesso.";
+    }
+
+    public MatriculaCursoDTO carregarDadosMatriculaDiscente(long idPessoa) {
+        MatriculaCurso matriculaDiscente = matriculaCursoRepository.findMatriculaCursoAtivaByPessoaId(idPessoa)
+                .orElseThrow(() -> new IllegalArgumentException("Não foi encontrada matrícula ativa para esse discente."));
+
+        CursoDTO cursoDTO = new CursoDTO(
+                matriculaDiscente.getCurso().getId(),
+                matriculaDiscente.getCurso().getNomeCurso(),
+                matriculaDiscente.getCurso().getSiglaCurso()
+        );
+
+        return new MatriculaCursoDTO(
+                matriculaDiscente.getId(),
+                cursoDTO,
+                matriculaDiscente.getPeriodo()
+        );
     }
 
 }
