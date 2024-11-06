@@ -22,11 +22,11 @@ public class Discente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_pessoa", nullable = false, unique = true)
-    Pessoa pessoa;
+    @JoinColumn(name = "id_pessoa", nullable = false)
+    private Pessoa pessoa;
 
     @Column(name = "data_cadastro", nullable = false)
     private LocalDate dataCadastro;

@@ -1,6 +1,13 @@
 package org.campusconnect.estudafacil.service;
 
 import lombok.RequiredArgsConstructor;
+import org.campusconnect.estudafacil.dto.AlocacaoDiscenteDTO;
+import org.campusconnect.estudafacil.dto.DiscenteDTO;
+import org.campusconnect.estudafacil.dto.FichaIndividualDiscenteDTO;
+import org.campusconnect.estudafacil.dto.NotaDTO;
+import org.campusconnect.estudafacil.dto.SituacaoAlocacaoDiscenteDTO;
+import org.campusconnect.estudafacil.dto.TurmaUnidadeCurricularDTO;
+import org.campusconnect.estudafacil.dto.UnidadeCurricularDTO;
 import org.campusconnect.estudafacil.entity.AlocacaoDiscenteTurma;
 import org.campusconnect.estudafacil.entity.Discente;
 import org.campusconnect.estudafacil.entity.FichaIndividualAlocacaoDiscente;
@@ -11,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +63,56 @@ public class AlocacaoDiscenteTurmaService {
             }
         });
         alocacaoDiscenteTurmaRepository.saveAll(alocacoesDiscentes);
+    }
+
+    public AlocacaoDiscenteDTO carregarDadosAlocacaoDiscente(long idPessoa) {
+        AlocacaoDiscenteTurma alocacao = alocacaoDiscenteTurmaRepository.carregarDadosAlocacaoDiscenteByIdPessoa(idPessoa)
+                .orElseThrow(() -> new IllegalArgumentException("Alocação não encontrada para o ID da pessoa: " + idPessoa));
+
+        DiscenteDTO discenteDTO = new DiscenteDTO(
+                alocacao.getDiscente().getId(),
+                alocacao.getDiscente().getCodDiscente()
+        );
+
+        UnidadeCurricularDTO unidadeCurricularDTO = new UnidadeCurricularDTO(
+                alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getId(),
+                alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getNomeUnidadeCurricular(),
+                alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getEmenta()
+        );
+
+        TurmaUnidadeCurricularDTO turmaUnidadeCurricularDTO = new TurmaUnidadeCurricularDTO(
+                alocacao.getTurmaUnidadeCurricular().getId(),
+                alocacao.getTurmaUnidadeCurricular().getCodigoTurma(),
+                unidadeCurricularDTO
+        );
+
+        SituacaoAlocacaoDiscenteDTO situacaoDTO = new SituacaoAlocacaoDiscenteDTO(
+                alocacao.getSituacaoAlocacaoDiscente().getId(),
+                alocacao.getSituacaoAlocacaoDiscente().getDescricao()
+        );
+
+        List<NotaDTO> notasDTO = alocacao.getFichaIndividualAlocacaoDiscente().getNotas().stream()
+                .map(nota -> new NotaDTO(nota.getId(), nota.getValor(), nota.isReposicao()))
+                .collect(Collectors.toList());
+
+        FichaIndividualDiscenteDTO fichaDTO = new FichaIndividualDiscenteDTO(
+                alocacao.getFichaIndividualAlocacaoDiscente().getId(),
+                notasDTO,
+                alocacao.getFichaIndividualAlocacaoDiscente().getFaltas(),
+                alocacao.getFichaIndividualAlocacaoDiscente().getResultadoFinal()
+        );
+
+        return new AlocacaoDiscenteDTO(
+                alocacao.getId(),
+                discenteDTO,
+                turmaUnidadeCurricularDTO,
+                situacaoDTO,
+                fichaDTO
+        );
+    }
+
+    public void carregarDadosCursoDiscente() {
+
     }
 
 }

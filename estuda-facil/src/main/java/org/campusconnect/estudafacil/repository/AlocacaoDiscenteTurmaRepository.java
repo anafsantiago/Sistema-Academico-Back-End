@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AlocacaoDiscenteTurmaRepository extends JpaRepository<AlocacaoDiscenteTurma, Long> {
@@ -15,5 +16,17 @@ public interface AlocacaoDiscenteTurmaRepository extends JpaRepository<AlocacaoD
             " FROM AlocacaoDiscenteTurma adt " +
             " WHERE adt.turmaUnidadeCurricular.id = :idTurma ")
     List<AlocacaoDiscenteTurma> findAlocacoesByIdTurma(@Param("idTurma") long idTurma);
+
+    @Query("""
+        SELECT adt FROM AlocacaoDiscenteTurma adt
+        JOIN adt.discente d
+        JOIN adt.turmaUnidadeCurricular tuc
+        JOIN tuc.unidadeCurricular uc
+        JOIN adt.situacaoAlocacaoDiscente sad
+        JOIN adt.fichaIndividualAlocacaoDiscente fid
+        JOIN fid.notas n
+        JOIN d.pessoa p WHERE p.id = :idPessoa\s
+       \s""")
+    Optional<AlocacaoDiscenteTurma> carregarDadosAlocacaoDiscenteByIdPessoa(@Param("idPessoa") long idPessoa);
 
 }
