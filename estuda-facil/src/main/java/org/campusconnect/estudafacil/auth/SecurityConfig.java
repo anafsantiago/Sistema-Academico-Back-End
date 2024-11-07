@@ -50,7 +50,10 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/api/calendario-academico/cadastrar").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/usuario/carregar-usuario-logado").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/alocacao-discente/carregar-alocacao").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/alocacao-discente/carregar-alocacoes").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/alocacao-docente/carregar-alocacoes").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/matricula-curso/carregar-matricula").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/curso/carregar-curso").permitAll()
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

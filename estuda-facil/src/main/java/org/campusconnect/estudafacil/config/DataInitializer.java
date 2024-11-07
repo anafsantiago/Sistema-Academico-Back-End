@@ -10,6 +10,8 @@ import org.campusconnect.estudafacil.entity.SituacaoAlocacaoDiscente;
 import org.campusconnect.estudafacil.entity.SituacaoAlocacaoDocente;
 import org.campusconnect.estudafacil.entity.SituacaoMatricula;
 import org.campusconnect.estudafacil.entity.SituacaoTurma;
+import org.campusconnect.estudafacil.entity.TurmaUnidadeCurricular;
+import org.campusconnect.estudafacil.entity.Turno;
 import org.campusconnect.estudafacil.entity.UnidadeCurricular;
 import org.campusconnect.estudafacil.repository.CalendarioAcademicoRepository;
 import org.campusconnect.estudafacil.repository.CursoRepository;
@@ -20,9 +22,14 @@ import org.campusconnect.estudafacil.repository.SituacaoAlocacaoDiscenteReposito
 import org.campusconnect.estudafacil.repository.SituacaoAlocacaoDocenteRepository;
 import org.campusconnect.estudafacil.repository.SituacaoMatriculaRepository;
 import org.campusconnect.estudafacil.repository.SituacaoTurmaRepository;
+import org.campusconnect.estudafacil.repository.TurmaUnidadeCurricularRepository;
+import org.campusconnect.estudafacil.repository.TurnoRepository;
 import org.campusconnect.estudafacil.repository.UnidadeCurricularRepository;
+import org.campusconnect.estudafacil.service.AlocacaoDiscenteTurmaService;
+import org.campusconnect.estudafacil.service.AlocacaoDocenteTurmaService;
 import org.campusconnect.estudafacil.service.DiscenteService;
 import org.campusconnect.estudafacil.service.DocenteService;
+import org.campusconnect.estudafacil.service.TurmaUnidadeCurricularService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -45,8 +52,12 @@ public class DataInitializer implements CommandLineRunner {
     private final SituacaoAlocacaoDocenteRepository situacaoAlocacaoDocenteRepository;
     private final PapelRepository papelRepository;
     private final CalendarioAcademicoRepository calendarioAcademicoRepository;
+    private final TurnoRepository turnoRepository;
     private final DiscenteService discenteService;
     private final DocenteService docenteService;
+    private final TurmaUnidadeCurricularService turmaUnidadeCurricularService;
+    private final AlocacaoDiscenteTurmaService alocacaoDiscenteTurmaService;
+    private final AlocacaoDocenteTurmaService alocacaoDocenteTurmaService;
 
     @Override
     public void run(String... args) {
@@ -54,13 +65,14 @@ public class DataInitializer implements CommandLineRunner {
         criarSituacoes();
         criarPapeis();
         criarCalendarioAcademico();
+        criarTurnos();
 
         Pessoa pessoaDiscente = Pessoa.builder()
                 .nome("Aluno Exemplo")
                 .dataNascimento(LocalDate.of(2000, 1, 1))
                 .cpf("12345678901")
                 .contato("123456789")
-                .email("aluno@example.com")
+                .email("aluno@examplo.com")
                 .dataCadastro(LocalDate.now())
                 .build();
 
@@ -69,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
                 .dataNascimento(LocalDate.of(1980, 1, 1))
                 .cpf("12345678902")
                 .contato("987654321")
-                .email("professor@example.com")
+                .email("professor@examplo.com")
                 .dataCadastro(LocalDate.now())
                 .build();
 
@@ -78,7 +90,7 @@ public class DataInitializer implements CommandLineRunner {
                 .dataNascimento(LocalDate.of(1970, 1, 1))
                 .cpf("12345678903")
                 .contato("555555555")
-                .email("gestor@example.com")
+                .email("gestor@examplo.com")
                 .dataCadastro(LocalDate.now())
                 .build();
 
@@ -87,13 +99,19 @@ public class DataInitializer implements CommandLineRunner {
         pessoaRepository.save(pessoaDocenteGestor);
 
         discenteService.cadastrarDiscente(pessoaDiscente.getId(), criarCurso());
+        criarTurmas();
         docenteService.cadastrarDocente(pessoaDocente.getId(), false);
         docenteService.cadastrarDocente(pessoaDocenteGestor.getId(), true);
 
+        alocacaoDiscenteTurmaService.cadastrarAlocacaoDiscenteTurma(1, 1);
+        alocacaoDiscenteTurmaService.cadastrarAlocacaoDiscenteTurma(1, 2);
+
+        alocacaoDocenteTurmaService.cadastrarAlocacaoDocenteTurma(1, 1);
+        alocacaoDocenteTurmaService.cadastrarAlocacaoDocenteTurma(1, 2);
     }
 
     private long criarCurso() {
-        // Criar Unidades Curriculares
+
         List<UnidadeCurricular> unidadesCurriculares = new ArrayList<>();
 
         UnidadeCurricular unidade1 = new UnidadeCurricular();
@@ -182,12 +200,10 @@ public class DataInitializer implements CommandLineRunner {
         unidadesCurriculares.add(unidade17);
         unidadeCurricularRepository.saveAll(unidadesCurriculares);
 
-        // Criar Grade Curricular
         GradeCurricular gradeCurricular = new GradeCurricular();
         gradeCurricular.setUnidadesCurriculares(unidadesCurriculares);
         gradeCurricularRepository.save(gradeCurricular);
 
-        // Criar Curso
         Curso curso = new Curso();
         curso.setNomeCurso("Ciência da Computação");
         curso.setCargaHorariaTotal(3000);
@@ -197,27 +213,24 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void criarSituacoes() {
-        // Inicializa Situação Alocação Discente
+
         situacaoAlocacaoDiscenteRepository.saveAll(Arrays.asList(
                 SituacaoAlocacaoDiscente.builder().descricao(SituacaoAlocacaoDiscente.SITUACAO_ATIVA).build(),
                 SituacaoAlocacaoDiscente.builder().descricao(SituacaoAlocacaoDiscente.SITUACAO_REPROVADA).build(),
                 SituacaoAlocacaoDiscente.builder().descricao(SituacaoAlocacaoDiscente.SITUACAO_APROVADA).build()
         ));
 
-        // Inicializa Situação Alocação Docente
         situacaoAlocacaoDocenteRepository.saveAll(Arrays.asList(
                 SituacaoAlocacaoDocente.builder().descricao(SituacaoAlocacaoDocente.SITUACAO_ATIVA).build(),
                 SituacaoAlocacaoDocente.builder().descricao(SituacaoAlocacaoDocente.SITUACAO_FINALIZADA).build()
         ));
 
-        // Inicializa Situação Matrícula
         situacaoMatriculaRepository.saveAll(Arrays.asList(
                 SituacaoMatricula.builder().descricao(SituacaoMatricula.SITUACAO_ATIVA).build(),
                 SituacaoMatricula.builder().descricao(SituacaoMatricula.SITUACAO_CONCLUIDA).build(),
                 SituacaoMatricula.builder().descricao(SituacaoMatricula.SITUACAO_CANCELADA).build()
         ));
 
-        // Inicializa Situação Turma
         situacaoTurmaRepository.saveAll(Arrays.asList(
                 SituacaoTurma.builder().descricao(SituacaoTurma.SITUACAO_ABERTA).build(),
                 SituacaoTurma.builder().descricao(SituacaoTurma.SITUACAO_CONSOLIDADA).build()
@@ -243,6 +256,60 @@ public class DataInitializer implements CommandLineRunner {
                 .fimSegundoSemestre(LocalDate.of(anoLetivo, 12, 24))
                 .build();
         calendarioAcademicoRepository.save(calendario);
+    }
+
+    private void criarTurnos() {
+
+        Turno turnoMatutino = new Turno();
+        turnoMatutino.setDescricao("MATUTINO");
+        turnoRepository.save(turnoMatutino);
+
+        Turno turnoVespertino = new Turno();
+        turnoVespertino.setDescricao("VESPERTINO");
+        turnoRepository.save(turnoVespertino);
+
+        Turno turnoNoturno = new Turno();
+        turnoNoturno.setDescricao("NOTURNO");
+        turnoRepository.save(turnoNoturno);
+
+    }
+
+    private void criarTurmas() {
+        TurmaUnidadeCurricular turmaUnidadeCurricular = new TurmaUnidadeCurricular();
+        UnidadeCurricular unidadeCurricular = new UnidadeCurricular();
+        unidadeCurricular.setId(1L);
+        unidadeCurricular.setNomeUnidadeCurricular("Ambientes computacionais e conectividade");
+        unidadeCurricular.setEmenta("Ementa da unidade curricular ACC.");
+
+        Turno turno = new Turno();
+        turno.setId(1L);
+        turno.setDescricao("MATUTINO");
+        turno.setAbreviacaoTurno("MAT");
+        String codTurma = turmaUnidadeCurricularService.gerarCodigoTurma(unidadeCurricular.getSiglaUnidadeCurricular(),
+                turno.getAbreviacaoTurno());
+        turmaUnidadeCurricular.setCodigoTurma(codTurma);
+        turmaUnidadeCurricular.setUnidadeCurricular(unidadeCurricular);
+        turmaUnidadeCurricular.setTurno(turno);
+        turmaUnidadeCurricular.setQuantidadeVagas(50);
+        turmaUnidadeCurricularService.cadastrarTurmaUnidadeCurricular(turmaUnidadeCurricular);
+
+        TurmaUnidadeCurricular turmaUnidadeCurricular2 = new TurmaUnidadeCurricular();
+        UnidadeCurricular unidadeCurricular2 = new UnidadeCurricular();
+        unidadeCurricular2.setId(2L);
+        unidadeCurricular2.setNomeUnidadeCurricular("Análise de dados e big data");
+        unidadeCurricular2.setEmenta("Ementa da unidade curricular ADBD.");
+
+        Turno turno2 = new Turno();
+        turno2.setId(2L);
+        turno2.setDescricao("VESPERTINO");
+        turno2.setAbreviacaoTurno("VES");
+        String codTurma2 = turmaUnidadeCurricularService.gerarCodigoTurma(unidadeCurricular2.getSiglaUnidadeCurricular(),
+                turno2.getAbreviacaoTurno());
+        turmaUnidadeCurricular2.setCodigoTurma(codTurma2);
+        turmaUnidadeCurricular2.setUnidadeCurricular(unidadeCurricular2);
+        turmaUnidadeCurricular2.setTurno(turno2);
+        turmaUnidadeCurricular2.setQuantidadeVagas(50);
+        turmaUnidadeCurricularService.cadastrarTurmaUnidadeCurricular(turmaUnidadeCurricular2);
     }
 
 }

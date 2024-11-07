@@ -98,7 +98,8 @@ public class FichaIndividualAlocacaoDiscenteService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Lista de fichas está vazia"));
         TurmaUnidadeCurricular turmaUnidadeCurricular = turmaUnidadeCurricularService.getTurmaByIdFichaIndividual(idFicha);
-        int qtdDiasAulas = turmaUnidadeCurricularService.calcularDiasDeAulaNoSemestre(turmaUnidadeCurricular);
+        //int qtdDiasAulas = turmaUnidadeCurricularService.calcularDiasDeAulaNoSemestre(turmaUnidadeCurricular);
+        int qtdDiasAulas = 100;
         fichas.forEach(ficha -> {
             int totalFaltas = ficha.getFaltas();
             float porcentagemFrequencia = ((float) (qtdDiasAulas - totalFaltas) / qtdDiasAulas) * 100;

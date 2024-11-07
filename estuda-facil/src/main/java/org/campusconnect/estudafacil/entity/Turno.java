@@ -26,7 +26,7 @@ public class Turno {
     private String abreviacaoTurno;
 
     public void setDescricao(String descricao) {
-        descricao = descricao.toUpperCase().trim();
+        this.descricao = descricao.toUpperCase().trim();
         if (descricao != null && descricao.length() >= 3) {
             abreviacaoTurno = descricao.substring(0, 3).toUpperCase();
         } else {

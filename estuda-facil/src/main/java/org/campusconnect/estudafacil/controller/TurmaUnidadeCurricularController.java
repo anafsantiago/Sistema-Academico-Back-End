@@ -30,10 +30,16 @@ public class TurmaUnidadeCurricularController {
         return ResponseEntity.ok(codigoTurma);
     }
 
-    @PutMapping("/cadastrar")
+/*    @PutMapping("/cadastrar")
     public ResponseEntity<String> cadastrarTurma(@RequestBody TurmaUnidadeCurricular turmaUnidadeCurricular,
                                                  @RequestParam List<Long> idsHorarios) {
         String mensagem = turmaUnidadeCurricularService.cadastrarTurmaUnidadeCurricular(turmaUnidadeCurricular, idsHorarios);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
+    }*/
+
+    @PutMapping("/cadastrar")
+    public ResponseEntity<String> cadastrarTurma(@RequestBody TurmaUnidadeCurricular turmaUnidadeCurricular) {
+        String mensagem = turmaUnidadeCurricularService.cadastrarTurmaUnidadeCurricular(turmaUnidadeCurricular);
         return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);
     }
 

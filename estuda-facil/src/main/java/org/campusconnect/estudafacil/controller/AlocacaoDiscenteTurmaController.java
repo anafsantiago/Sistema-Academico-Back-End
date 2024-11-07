@@ -27,8 +27,14 @@ public class AlocacaoDiscenteTurmaController {
     }
 
     @GetMapping("/carregar-alocacao")
-    public ResponseEntity<List<AlocacaoDiscenteDTO>> carregarAlocacoesDiscenteTurma(@RequestParam long idPessoa) {
+    public ResponseEntity<List<AlocacaoDiscenteDTO>> carregarAlocacoesDiscenteTurmaPorIdPessoa(@RequestParam long idPessoa) {
         List<AlocacaoDiscenteDTO> alocacoesDiscente = alocacaoDiscenteTurmaService.carregarDadosAlocacoesDiscente(idPessoa);
+        return ResponseEntity.ok().body(alocacoesDiscente);
+    }
+
+    @GetMapping("/carregar-alocacoes")
+    public ResponseEntity<List<AlocacaoDiscenteDTO>> carregarAlocacoesDiscenteTurmaPorIdTurma(@RequestParam long idTurma) {
+        List<AlocacaoDiscenteDTO> alocacoesDiscente = alocacaoDiscenteTurmaService.getaAllPorIdTurma(idTurma);
         return ResponseEntity.ok().body(alocacoesDiscente);
     }
 

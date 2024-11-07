@@ -114,4 +114,54 @@ public class AlocacaoDiscenteTurmaService {
                 .collect(Collectors.toList());
     }
 
+    public List<AlocacaoDiscenteDTO> getaAllPorIdTurma(long idTurma) {
+        List<AlocacaoDiscenteTurma> alocacoesDiscente = alocacaoDiscenteTurmaRepository.findAlocacoesByIdTurma(idTurma);
+        return alocacoesDiscente.stream()
+                .map(alocacao -> {
+                    DiscenteDTO discenteDTO = new DiscenteDTO(
+                            alocacao.getDiscente().getId(),
+                            alocacao.getDiscente().getCodDiscente()
+                    );
+
+                    UnidadeCurricularDTO unidadeCurricularDTO = new UnidadeCurricularDTO(
+                            alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getId(),
+                            alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getNomeUnidadeCurricular(),
+                            alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getEmenta()
+                    );
+
+                    TurmaUnidadeCurricularDTO turmaUnidadeCurricularDTO = new TurmaUnidadeCurricularDTO(
+                            alocacao.getTurmaUnidadeCurricular().getId(),
+                            alocacao.getTurmaUnidadeCurricular().getCodigoTurma(),
+                            unidadeCurricularDTO
+                    );
+
+                    SituacaoAlocacaoDiscenteDTO situacaoDTO = new SituacaoAlocacaoDiscenteDTO(
+                            alocacao.getSituacaoAlocacaoDiscente().getId(),
+                            alocacao.getSituacaoAlocacaoDiscente().getDescricao()
+                    );
+
+                    List<NotaDTO> notasDTO = alocacao.getFichaIndividualAlocacaoDiscente().getNotas().stream()
+                            .map(nota -> new NotaDTO(nota.getId(), nota.getValor(), nota.isReposicao()))
+                            .collect(Collectors.toList());
+
+                    FichaIndividualDiscenteDTO fichaDTO = new FichaIndividualDiscenteDTO(
+                            alocacao.getFichaIndividualAlocacaoDiscente().getId(),
+                            notasDTO,
+                            alocacao.getFichaIndividualAlocacaoDiscente().getFaltas(),
+                            alocacao.getFichaIndividualAlocacaoDiscente().getResultadoFinal(),
+                            alocacao.getFichaIndividualAlocacaoDiscente().getPorcentagemFrequencia()
+                    );
+
+                    return new AlocacaoDiscenteDTO(
+                            alocacao.getId(),
+                            discenteDTO,
+                            turmaUnidadeCurricularDTO,
+                            situacaoDTO,
+                            fichaDTO
+                    );
+                })
+                .collect(Collectors.toList());
+
+    }
+
 }

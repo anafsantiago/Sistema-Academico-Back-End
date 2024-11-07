@@ -6,18 +6,24 @@ public class StringUtil {
         if (nome == null || nome.isEmpty()) {
             return "";
         }
-        String[] palavras = nome.split(" ");
+
+        String[] palavras = nome.split("\\s+");
         StringBuilder iniciais = new StringBuilder();
+
         if (palavras.length > 1) {
             for (String palavra : palavras) {
-                if (!palavra.isEmpty()) {
-                    iniciais.append(palavra, 0, 1);
+                if (palavra.length() > 2) {
+                    iniciais.append(palavra.charAt(0));
                 }
             }
         } else {
-            iniciais.append(nome, 0, Math.min(nome.length(), 4));
+            if (nome.length() <= 2) {
+                return nome.toUpperCase();
+            } else {
+                return nome.substring(0, 3).toUpperCase();
+            }
         }
+
         return iniciais.toString().toUpperCase().trim();
     }
-
 }

@@ -56,7 +56,8 @@ public class TurmaUnidadeCurricularService {
     }
 
     @Transactional
-    public String cadastrarTurmaUnidadeCurricular(TurmaUnidadeCurricular turmaUnidadeCurricular, List<Long> idsHorarios) {
+    //public String cadastrarTurmaUnidadeCurricular(TurmaUnidadeCurricular turmaUnidadeCurricular, List<Long> idsHorarios) {
+    public String cadastrarTurmaUnidadeCurricular(TurmaUnidadeCurricular turmaUnidadeCurricular) {
         CalendarioAcademico calendarioAcademicoVigente = calendarioAcademicoService.getCalendarioAcademicoVigente();
         SituacaoTurma situacaoTurma = situacaoTurmaService.getSitucaoTurmaPorDescricao(SituacaoTurma.SITUACAO_ABERTA);
         TurmaUnidadeCurricular novaTurma = new TurmaUnidadeCurricular();
@@ -68,17 +69,20 @@ public class TurmaUnidadeCurricularService {
         novaTurma.setSemestre(calendarioAcademicoVigente.getSemestreVigente());
         novaTurma.setAnoLetivo(calendarioAcademicoVigente.getAnoLetivo());
         novaTurma.setQuantidadeVagas(turmaUnidadeCurricular.getQuantidadeVagas());
-        List<LocalDate> diasDeAula = obterDiasDeAula(novaTurma, calendarioAcademicoVigente);
+/*        List<LocalDate> diasDeAula = obterDiasDeAula(novaTurma, calendarioAcademicoVigente);
         if (!diasDeAula.isEmpty()) {
             novaTurma.setDataInicio(diasDeAula.getFirst());
             novaTurma.setDataFim(diasDeAula.getLast());
-        }
+        }*/
+        int anoLetivo = LocalDate.now().getYear();
+        novaTurma.setDataInicio(LocalDate.of(anoLetivo, 2, 20));
+        novaTurma.setDataFim(LocalDate.of(anoLetivo, 6, 30));
         turmaRepository.save(novaTurma);
-        String mensagemHorarios = horarioTurmaService.cadastrarHorarioTurma(novaTurma, idsHorarios);
+        //String mensagemHorarios = horarioTurmaService.cadastrarHorarioTurma(novaTurma, idsHorarios);
         StringBuilder mensagem = new StringBuilder();
         mensagem.append("Turma cadastrada com sucesso.");
         mensagem.append("\n");
-        mensagem.append(mensagemHorarios);
+        //mensagem.append(mensagemHorarios);
         return mensagem.toString();
     }
 

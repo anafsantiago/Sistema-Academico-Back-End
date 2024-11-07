@@ -14,4 +14,8 @@ public class FichaIndividualDiscenteDTO {
     private List<NotaDTO> notas;
     private int faltas;
     private float resultadoFinal;
+    private float porcentagemFrequencia;
+
+    public FichaIndividualDiscenteDTO(long id, List<NotaDTO> notasDTO, int faltas, float resultadoFinal) {
+    }
 }
