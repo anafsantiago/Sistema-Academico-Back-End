@@ -1,11 +1,13 @@
 package org.campusconnect.estudafacil.service;
 
+import lombok.RequiredArgsConstructor;
+import org.campusconnect.estudafacil.dto.DiscenteDTO;
+import org.campusconnect.estudafacil.dto.PessoaDTO;
 import org.campusconnect.estudafacil.entity.CalendarioAcademico;
 import org.campusconnect.estudafacil.entity.Discente;
 import org.campusconnect.estudafacil.entity.Papel;
 import org.campusconnect.estudafacil.entity.Pessoa;
 import org.campusconnect.estudafacil.repository.DiscenteRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,15 @@ public class DiscenteService {
 
     public Discente getDiscentePorId(long id) {
         return discenteRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Discente não encontrado."));
+    }
+
+    public DiscenteDTO getDiscentePorCpf(String cpf) {
+        Discente discente = discenteRepository.findByPessoaCpf(cpf).orElseThrow(() -> new IllegalArgumentException("Discente não encontrado."));
+        PessoaDTO pessoaDTO = new PessoaDTO(
+                discente.getPessoa().getId(),
+                discente.getPessoa().getNome()
+        );
+        return new DiscenteDTO(discente.getId(), pessoaDTO, null);
     }
 
     @Transactional

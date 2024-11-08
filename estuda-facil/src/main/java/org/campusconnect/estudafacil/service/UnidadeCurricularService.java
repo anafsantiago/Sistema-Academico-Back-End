@@ -15,7 +15,7 @@ public class UnidadeCurricularService {
 
     private final UnidadeCurricularRepository unidadeCurricularRepository;
 
-    public List<UnidadeCurricularDTO> getAll() {
+    public List<UnidadeCurricularDTO> getAllUnidades() {
         List<UnidadeCurricular> unidadesCurriculares = unidadeCurricularRepository.findAll();
         return unidadesCurriculares.stream()
                 .map(unidadeCurricular -> new UnidadeCurricularDTO(

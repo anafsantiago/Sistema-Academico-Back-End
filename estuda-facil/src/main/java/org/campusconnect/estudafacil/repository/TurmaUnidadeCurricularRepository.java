@@ -20,4 +20,13 @@ public interface TurmaUnidadeCurricularRepository extends JpaRepository<TurmaUni
             " WHERE adt.fichaIndividualAlocacaoDiscente.id = :idFichaIndividual ")
     Optional<TurmaUnidadeCurricular> findByIdFichaIndividual(@Param("idFichaIndividual") long idFichaIndividual);
 
+    @Query("SELECT t FROM TurmaUnidadeCurricular t WHERE t.situacaoTurma.descricao = :descricao")
+    List<TurmaUnidadeCurricular> findAllBySituacaoAberta(@Param("descricao") String descricao);
+
+    @Query("SELECT t FROM TurmaUnidadeCurricular t " +
+            "WHERE t.situacaoTurma.descricao = :descricao " +
+            "AND NOT EXISTS (SELECT 1 FROM AlocacaoDiscenteTurma a WHERE a.discente.id = :discenteId AND a.turmaUnidadeCurricular.id = t.id)")
+    List<TurmaUnidadeCurricular> findAllTurmasAbertasAlocaveis(@Param("descricao") String descricao, @Param("discenteId") long discenteId);
+
+
 }

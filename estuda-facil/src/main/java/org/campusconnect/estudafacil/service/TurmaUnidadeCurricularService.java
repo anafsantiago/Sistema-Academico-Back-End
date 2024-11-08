@@ -1,6 +1,8 @@
 package org.campusconnect.estudafacil.service;
 
 import lombok.RequiredArgsConstructor;
+import org.campusconnect.estudafacil.dto.TurmaUnidadeCurricularDTO;
+import org.campusconnect.estudafacil.dto.UnidadeCurricularDTO;
 import org.campusconnect.estudafacil.entity.CalendarioAcademico;
 import org.campusconnect.estudafacil.entity.SituacaoTurma;
 import org.campusconnect.estudafacil.entity.TurmaUnidadeCurricular;
@@ -21,6 +23,21 @@ public class TurmaUnidadeCurricularService {
     private final CalendarioAcademicoService calendarioAcademicoService;
     private final HorarioTurmaService horarioTurmaService;
     private final SituacaoTurmaService situacaoTurmaService;
+
+    public List<TurmaUnidadeCurricularDTO> getAllTurmasAbertasAlocaveis(long idDiscente) {
+        List<TurmaUnidadeCurricular> turmasUnidades = turmaRepository.findAllTurmasAbertasAlocaveis(SituacaoTurma.SITUACAO_ABERTA, idDiscente);
+        return turmasUnidades.stream()
+                .map(turmaUnidade -> new TurmaUnidadeCurricularDTO(
+                        turmaUnidade.getId(),
+                        turmaUnidade.getCodigoTurma(),
+                        new UnidadeCurricularDTO(
+                                turmaUnidade.getUnidadeCurricular().getId(),
+                                turmaUnidade.getUnidadeCurricular().getNomeUnidadeCurricular(),
+                                turmaUnidade.getUnidadeCurricular().getEmenta(),
+                                turmaUnidade.getUnidadeCurricular().getSiglaUnidadeCurricular()
+                        ), null))
+                .collect(Collectors.toList());
+    }
 
     public TurmaUnidadeCurricular getTurmaUnidadeCurricularPorId(long idTurma) {
         return turmaRepository.findById(idTurma).orElseThrow(() -> new IllegalArgumentException("Turma não encontrada."));

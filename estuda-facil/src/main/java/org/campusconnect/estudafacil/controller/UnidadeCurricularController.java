@@ -19,7 +19,7 @@ public class UnidadeCurricularController {
 
     @GetMapping("/carregar-unidades")
     public ResponseEntity<List<UnidadeCurricularDTO>> carregarUnidades() {
-        List<UnidadeCurricularDTO> unidadesCurriculares = unidadeCurricularService.getAll();
+        List<UnidadeCurricularDTO> unidadesCurriculares = unidadeCurricularService.getAllUnidades();
         return ResponseEntity.ok().body(unidadesCurriculares);
     }
 }

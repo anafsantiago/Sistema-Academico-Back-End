@@ -1,6 +1,7 @@
 package org.campusconnect.estudafacil.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.campusconnect.estudafacil.dto.TurmaUnidadeCurricularDTO;
 import org.campusconnect.estudafacil.entity.TurmaUnidadeCurricular;
 import org.campusconnect.estudafacil.service.ConsolidacaoTurmaService;
 import org.campusconnect.estudafacil.service.TurmaUnidadeCurricularService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/turma")
 @RequiredArgsConstructor
@@ -21,6 +24,12 @@ public class TurmaUnidadeCurricularController {
 
     private final TurmaUnidadeCurricularService turmaUnidadeCurricularService;
     private final ConsolidacaoTurmaService consolidacaoTurmaService;
+
+    @GetMapping("/carregar-turmas-alocaveis")
+    public ResponseEntity<List<TurmaUnidadeCurricularDTO>> carregarTurmas(@RequestParam long idDiscente) {
+        List<TurmaUnidadeCurricularDTO> turmasUnidades = turmaUnidadeCurricularService.getAllTurmasAbertasAlocaveis(idDiscente);
+        return ResponseEntity.ok().body(turmasUnidades);
+    }
 
     @GetMapping("/gerar-codigo")
     public ResponseEntity<String> gerarCodigoTurma(@RequestParam String siglaUnidadeCurricular,
