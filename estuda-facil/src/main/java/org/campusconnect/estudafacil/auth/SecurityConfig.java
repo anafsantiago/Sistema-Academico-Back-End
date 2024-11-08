@@ -54,6 +54,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/api/alocacao-docente/carregar-alocacoes").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/matricula-curso/carregar-matricula").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/curso/carregar-curso").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/api/ficha-individual/registrar-notas-frequencias").permitAll()
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

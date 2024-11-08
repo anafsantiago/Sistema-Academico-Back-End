@@ -1,3 +1,4 @@
+/*
 package org.campusconnect.estudafacil.dto;
 
 import lombok.AllArgsConstructor;
@@ -11,4 +12,4 @@ public class NotaDTO {
     private long id;
     private float valor;
     private boolean reposicao;
-}
+}*/

@@ -29,8 +29,8 @@ public class AlocacaoDiscenteTurma {
     @JoinColumn(name = "id_discente", nullable = false)
     private Discente discente;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_turma_unidade_curricular", nullable = false, unique = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_turma_unidade_curricular", nullable = false)
     private TurmaUnidadeCurricular turmaUnidadeCurricular;
 
     @Column(nullable = false)

@@ -1,20 +1,14 @@
 package org.campusconnect.estudafacil.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,13 +21,21 @@ public class FichaIndividualAlocacaoDiscente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_boletim_ficha", nullable = false)
-    private List<Nota> notas;
+    @Column(name = "nota_primeira_unidade")
+    private float notaUnidade1;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Column(name = "nota_segunda_unidade")
+    private float notaUnidade2;
+
+    @Column(name = "nota_terceira_unidade")
+    private float notaUnidade3;
+
+    @Column(name = "nota_reposicao")
+    private float notaReposicao;
+
+/*    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_presencario_ficha", nullable = false)
-    private List<Presenca> presencas;
+    private List<Presenca> presencas;*/
 
     @Column(nullable = false)
     private int faltas;

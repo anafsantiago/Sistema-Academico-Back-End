@@ -1,3 +1,4 @@
+/*
 package org.campusconnect.estudafacil.entity;
 
 import jakarta.persistence.Column;
@@ -30,4 +31,4 @@ public class Nota {
         this.reposicao = false;
     }
 
-}
+}*/

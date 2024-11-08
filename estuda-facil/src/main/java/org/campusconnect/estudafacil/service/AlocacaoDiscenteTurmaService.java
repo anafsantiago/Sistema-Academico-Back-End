@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.campusconnect.estudafacil.dto.AlocacaoDiscenteDTO;
 import org.campusconnect.estudafacil.dto.DiscenteDTO;
 import org.campusconnect.estudafacil.dto.FichaIndividualDiscenteDTO;
-import org.campusconnect.estudafacil.dto.NotaDTO;
+import org.campusconnect.estudafacil.dto.PessoaDTO;
 import org.campusconnect.estudafacil.dto.SituacaoAlocacaoDiscenteDTO;
 import org.campusconnect.estudafacil.dto.TurmaUnidadeCurricularDTO;
 import org.campusconnect.estudafacil.dto.UnidadeCurricularDTO;
@@ -92,15 +92,17 @@ public class AlocacaoDiscenteTurmaService {
                             alocacao.getSituacaoAlocacaoDiscente().getDescricao()
                     );
 
-                    List<NotaDTO> notasDTO = alocacao.getFichaIndividualAlocacaoDiscente().getNotas().stream()
-                            .map(nota -> new NotaDTO(nota.getId(), nota.getValor(), nota.isReposicao()))
-                            .collect(Collectors.toList());
+                    FichaIndividualAlocacaoDiscente ficha = alocacao.getFichaIndividualAlocacaoDiscente();
 
                     FichaIndividualDiscenteDTO fichaDTO = new FichaIndividualDiscenteDTO(
-                            alocacao.getFichaIndividualAlocacaoDiscente().getId(),
-                            notasDTO,
-                            alocacao.getFichaIndividualAlocacaoDiscente().getFaltas(),
-                            alocacao.getFichaIndividualAlocacaoDiscente().getResultadoFinal()
+                            ficha.getId(),
+                            ficha.getFaltas(),
+                            ficha.getNotaUnidade1(),
+                            ficha.getNotaUnidade2(),
+                            ficha.getNotaUnidade3(),
+                            ficha.getNotaReposicao(),
+                            ficha.getResultadoFinal(),
+                            ficha.getPorcentagemFrequencia()
                     );
 
                     return new AlocacaoDiscenteDTO(
@@ -114,12 +116,20 @@ public class AlocacaoDiscenteTurmaService {
                 .collect(Collectors.toList());
     }
 
+
     public List<AlocacaoDiscenteDTO> getaAllPorIdTurma(long idTurma) {
         List<AlocacaoDiscenteTurma> alocacoesDiscente = alocacaoDiscenteTurmaRepository.findAlocacoesByIdTurma(idTurma);
+
         return alocacoesDiscente.stream()
                 .map(alocacao -> {
+                    PessoaDTO pessoaDTO = new PessoaDTO(
+                            alocacao.getDiscente().getPessoa().getId(),
+                            alocacao.getDiscente().getPessoa().getNome()
+                    );
+
                     DiscenteDTO discenteDTO = new DiscenteDTO(
                             alocacao.getDiscente().getId(),
+                            pessoaDTO,
                             alocacao.getDiscente().getCodDiscente()
                     );
 
@@ -140,16 +150,17 @@ public class AlocacaoDiscenteTurmaService {
                             alocacao.getSituacaoAlocacaoDiscente().getDescricao()
                     );
 
-                    List<NotaDTO> notasDTO = alocacao.getFichaIndividualAlocacaoDiscente().getNotas().stream()
-                            .map(nota -> new NotaDTO(nota.getId(), nota.getValor(), nota.isReposicao()))
-                            .collect(Collectors.toList());
+                    FichaIndividualAlocacaoDiscente ficha = alocacao.getFichaIndividualAlocacaoDiscente();
 
                     FichaIndividualDiscenteDTO fichaDTO = new FichaIndividualDiscenteDTO(
-                            alocacao.getFichaIndividualAlocacaoDiscente().getId(),
-                            notasDTO,
-                            alocacao.getFichaIndividualAlocacaoDiscente().getFaltas(),
-                            alocacao.getFichaIndividualAlocacaoDiscente().getResultadoFinal(),
-                            alocacao.getFichaIndividualAlocacaoDiscente().getPorcentagemFrequencia()
+                            ficha.getId(),
+                            ficha.getFaltas(),
+                            ficha.getNotaUnidade1(),
+                            ficha.getNotaUnidade2(),
+                            ficha.getNotaUnidade3(),
+                            ficha.getNotaReposicao(),
+                            ficha.getResultadoFinal(),
+                            ficha.getPorcentagemFrequencia()
                     );
 
                     return new AlocacaoDiscenteDTO(
@@ -161,7 +172,6 @@ public class AlocacaoDiscenteTurmaService {
                     );
                 })
                 .collect(Collectors.toList());
-
     }
 
 }

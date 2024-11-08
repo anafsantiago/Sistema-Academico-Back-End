@@ -1,3 +1,4 @@
+/*
 package org.campusconnect.estudafacil.entity;
 
 import jakarta.persistence.Column;
@@ -27,4 +28,4 @@ public class Presenca {
     @Column(nullable = false)
     private LocalDate data;
 
-}
+}*/

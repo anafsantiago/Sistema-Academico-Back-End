@@ -76,6 +76,24 @@ public class DataInitializer implements CommandLineRunner {
                 .dataCadastro(LocalDate.now())
                 .build();
 
+        Pessoa pessoaDiscente2 = Pessoa.builder()
+                .nome("Aluno Exemplo2")
+                .dataNascimento(LocalDate.of(2002, 2, 2))
+                .cpf("22345678903")
+                .contato("223456789")
+                .email("aluno@examplo2.com")
+                .dataCadastro(LocalDate.now())
+                .build();
+
+        Pessoa pessoaDiscente3 = Pessoa.builder()
+                .nome("Aluno Exemplo3")
+                .dataNascimento(LocalDate.of(2003, 3, 3))
+                .cpf("32345678903")
+                .contato("323456789")
+                .email("aluno@examplo3.com")
+                .dataCadastro(LocalDate.now())
+                .build();
+
         Pessoa pessoaDocente = Pessoa.builder()
                 .nome("Professor Exemplo")
                 .dataNascimento(LocalDate.of(1980, 1, 1))
@@ -95,16 +113,21 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
 
         pessoaRepository.save(pessoaDiscente);
+        pessoaRepository.save(pessoaDiscente2);
+        pessoaRepository.save(pessoaDiscente3);
         pessoaRepository.save(pessoaDocente);
         pessoaRepository.save(pessoaDocenteGestor);
 
         discenteService.cadastrarDiscente(pessoaDiscente.getId(), criarCurso());
+        discenteService.cadastrarDiscente(pessoaDiscente2.getId(), 1);
+        discenteService.cadastrarDiscente(pessoaDiscente3.getId(), 1);
         criarTurmas();
         docenteService.cadastrarDocente(pessoaDocente.getId(), false);
         docenteService.cadastrarDocente(pessoaDocenteGestor.getId(), true);
 
         alocacaoDiscenteTurmaService.cadastrarAlocacaoDiscenteTurma(1, 1);
-        alocacaoDiscenteTurmaService.cadastrarAlocacaoDiscenteTurma(1, 2);
+        alocacaoDiscenteTurmaService.cadastrarAlocacaoDiscenteTurma(2, 2);
+        alocacaoDiscenteTurmaService.cadastrarAlocacaoDiscenteTurma(3, 2);
 
         alocacaoDocenteTurmaService.cadastrarAlocacaoDocenteTurma(1, 1);
         alocacaoDocenteTurmaService.cadastrarAlocacaoDocenteTurma(1, 2);
