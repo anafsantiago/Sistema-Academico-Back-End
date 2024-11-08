@@ -44,7 +44,7 @@ public class TurmaUnidadeCurricular {
     private List<HorarioTurma> horarios;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_turno", nullable = false, unique = true)
+    @JoinColumn(name = "id_turno", nullable = false)
     private Turno turno;
 
     @Column(name = "data_cadastro", nullable = false)

@@ -55,7 +55,11 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/api/matricula-curso/carregar-matricula").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/curso/carregar-curso").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/ficha-individual/registrar-notas-frequencias").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/turma/cadastrar").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/turma/gerar-codigo").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/turma/consolidar-turma").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/unidade/carregar-unidades").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/turno/carregar-turnos").permitAll()
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

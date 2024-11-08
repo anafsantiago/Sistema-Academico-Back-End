@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TurmaUnidadeCurricularDTO {
+public class TurnoDTO {
     private long id;
-    private String codigoTurma;
-    private UnidadeCurricularDTO unidadeCurricular;
-    private TurnoDTO turno;
+    private String descricao;
+    private String abreviacaoTurno;
 }

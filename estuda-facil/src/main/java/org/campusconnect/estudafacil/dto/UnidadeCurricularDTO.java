@@ -11,4 +11,5 @@ public class UnidadeCurricularDTO {
     private long id;
     private String nomeUnidadeCurricular;
     private String ementa;
+    private String siglaUnidadeCurricular;
 }

@@ -78,13 +78,15 @@ public class AlocacaoDiscenteTurmaService {
                     UnidadeCurricularDTO unidadeCurricularDTO = new UnidadeCurricularDTO(
                             alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getId(),
                             alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getNomeUnidadeCurricular(),
-                            alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getEmenta()
+                            alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getEmenta(),
+                            null
                     );
 
                     TurmaUnidadeCurricularDTO turmaUnidadeCurricularDTO = new TurmaUnidadeCurricularDTO(
                             alocacao.getTurmaUnidadeCurricular().getId(),
                             alocacao.getTurmaUnidadeCurricular().getCodigoTurma(),
-                            unidadeCurricularDTO
+                            unidadeCurricularDTO,
+                            null
                     );
 
                     SituacaoAlocacaoDiscenteDTO situacaoDTO = new SituacaoAlocacaoDiscenteDTO(
@@ -136,13 +138,15 @@ public class AlocacaoDiscenteTurmaService {
                     UnidadeCurricularDTO unidadeCurricularDTO = new UnidadeCurricularDTO(
                             alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getId(),
                             alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getNomeUnidadeCurricular(),
-                            alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getEmenta()
+                            alocacao.getTurmaUnidadeCurricular().getUnidadeCurricular().getEmenta(),
+                            null
                     );
 
                     TurmaUnidadeCurricularDTO turmaUnidadeCurricularDTO = new TurmaUnidadeCurricularDTO(
                             alocacao.getTurmaUnidadeCurricular().getId(),
                             alocacao.getTurmaUnidadeCurricular().getCodigoTurma(),
-                            unidadeCurricularDTO
+                            unidadeCurricularDTO,
+                            null
                     );
 
                     SituacaoAlocacaoDiscenteDTO situacaoDTO = new SituacaoAlocacaoDiscenteDTO(

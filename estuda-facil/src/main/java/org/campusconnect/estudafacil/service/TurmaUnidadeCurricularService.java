@@ -68,7 +68,7 @@ public class TurmaUnidadeCurricularService {
         novaTurma.setDataCadastro(LocalDate.now());
         novaTurma.setSemestre(calendarioAcademicoVigente.getSemestreVigente());
         novaTurma.setAnoLetivo(calendarioAcademicoVigente.getAnoLetivo());
-        novaTurma.setQuantidadeVagas(turmaUnidadeCurricular.getQuantidadeVagas());
+        novaTurma.setQuantidadeVagas(50);
 /*        List<LocalDate> diasDeAula = obterDiasDeAula(novaTurma, calendarioAcademicoVigente);
         if (!diasDeAula.isEmpty()) {
             novaTurma.setDataInicio(diasDeAula.getFirst());
